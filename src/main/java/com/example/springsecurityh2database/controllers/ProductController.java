@@ -23,9 +23,9 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping(value = "/all")
-    public ResponseEntity<List<ProductResponseDTO>> findAll() {
+    public ResponseEntity<List<ProductRequestDTO>> findAll() {
 
-        List<ProductResponseDTO> list = this.productRepository.findAll().stream().map(ProductResponseDTO::new).toList();
+        List<ProductRequestDTO> list = productService.findAll();
 
         return ResponseEntity.ok().body(list);
     }
