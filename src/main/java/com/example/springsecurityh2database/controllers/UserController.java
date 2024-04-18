@@ -1,8 +1,11 @@
 package com.example.springsecurityh2database.controllers;
 
+import com.example.springsecurityh2database.DTO.TokenResponseDTO;
 import com.example.springsecurityh2database.DTO.UserLoginDTO;
 import com.example.springsecurityh2database.DTO.UserRequestDTO;
+import com.example.springsecurityh2database.entites.User;
 import com.example.springsecurityh2database.repository.UserRepository;
+import com.example.springsecurityh2database.service.TokenService;
 import com.example.springsecurityh2database.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,9 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserRequestDTO userRequestDTO) {
 
@@ -50,9 +56,11 @@ public class UserController {
 
         var userNamePassword = new UsernamePasswordAuthenticationToken(userLoginDTO.login(), userLoginDTO.password());
 
-        var token = authenticationManager.authenticate(userNamePassword);
+        var authorization = authenticationManager.authenticate(userNamePassword);
 
-        return ResponseEntity.ok().body(token);
+        var token = tokenService.generateToken((User) authorization.getPrincipal());
+
+        return ResponseEntity.ok(new TokenResponseDTO(token));
     }
 
 
