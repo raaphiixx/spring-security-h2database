@@ -25,7 +25,7 @@ public class UserService {
     public UserRequestDTO register(UserRequestDTO userRequestDTO) {
 
         User user = new User();
-        user.setName(userRequestDTO.name());
+        user.setLogin(userRequestDTO.name());
         user.setPassword(userRequestDTO.password());
         user.setRole(userRequestDTO.role());
         userRepository.save(user);
