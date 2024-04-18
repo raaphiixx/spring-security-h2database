@@ -1,6 +1,6 @@
 package com.example.springsecurityh2database.entites;
 
-import com.example.springsecurityh2database.DTO.UserRegisterDTO;
+import com.example.springsecurityh2database.DTO.UserRequestDTO;
 import com.example.springsecurityh2database.entites.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,8 +27,8 @@ public class User implements UserDetails {
     private String password;
     private UserRole role;
 
-    public User(UserRegisterDTO data) {
-        this.login = data.name();
+    public User(UserRequestDTO data) {
+        this.login = data.login();
         this.password = data.password();
         this.role = data.role();
     }

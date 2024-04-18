@@ -5,6 +5,7 @@ import com.example.springsecurityh2database.entites.User;
 import com.example.springsecurityh2database.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,9 +25,11 @@ public class UserService {
 
     public UserRequestDTO register(UserRequestDTO userRequestDTO) {
 
+        String encryptPassword = new BCryptPasswordEncoder().encode(userRequestDTO.password());
+
         User user = new User();
-        user.setLogin(userRequestDTO.name());
-        user.setPassword(userRequestDTO.password());
+        user.setLogin(userRequestDTO.login());
+        user.setPassword(encryptPassword);
         user.setRole(userRequestDTO.role());
         userRepository.save(user);
 

@@ -1,10 +1,13 @@
 package com.example.springsecurityh2database.controllers;
 
+import com.example.springsecurityh2database.DTO.UserLoginDTO;
 import com.example.springsecurityh2database.DTO.UserRequestDTO;
 import com.example.springsecurityh2database.repository.UserRepository;
 import com.example.springsecurityh2database.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,14 +26,35 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserRequestDTO userRequestDTO) {
 
+        if(this.userRepository.findByLogin(userRequestDTO.login()) != null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         UserRequestDTO newUser = userService.register(userRequestDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{name}").buildAndExpand(newUser).toUri();
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{login}").buildAndExpand(newUser).toUri();
         String msg = "User Created";
 
         return ResponseEntity.created(uri).body(msg);
+
     }
+
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody UserLoginDTO userLoginDTO) {
+
+        var userNamePassword = new UsernamePasswordAuthenticationToken(userLoginDTO.login(), userLoginDTO.password());
+
+        var token = authenticationManager.authenticate(userNamePassword);
+
+        return ResponseEntity.ok().body(token);
+    }
+
+
 
 }

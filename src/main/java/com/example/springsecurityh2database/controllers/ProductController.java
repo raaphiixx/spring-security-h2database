@@ -1,7 +1,6 @@
 package com.example.springsecurityh2database.controllers;
 
 import com.example.springsecurityh2database.DTO.ProductRequestDTO;
-import com.example.springsecurityh2database.DTO.ProductResponseDTO;
 import com.example.springsecurityh2database.repository.ProductRepository;
 import com.example.springsecurityh2database.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping(value = "/all")
+    @GetMapping
     public ResponseEntity<List<ProductRequestDTO>> findAll() {
 
         List<ProductRequestDTO> list = productService.findAll();
@@ -30,11 +29,11 @@ public class ProductController {
         return ResponseEntity.ok().body(list);
     }
 
-    @PostMapping
+    @PostMapping(value = "/insert")
     public ResponseEntity insert(@RequestBody ProductRequestDTO productRequestDTO) {
 
         ProductRequestDTO saveProduct = productService.insert(productRequestDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{name}").buildAndExpand(saveProduct).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{login}").buildAndExpand(saveProduct).toUri();
 
         return ResponseEntity.created(uri).body(saveProduct);
     }
