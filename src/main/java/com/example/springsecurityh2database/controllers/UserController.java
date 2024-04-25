@@ -7,6 +7,7 @@ import com.example.springsecurityh2database.entites.User;
 import com.example.springsecurityh2database.repository.UserRepository;
 import com.example.springsecurityh2database.service.TokenService;
 import com.example.springsecurityh2database.service.UserService;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +36,7 @@ public class UserController {
     @Autowired
     private TokenService tokenService;
 
+    @PermitAll
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserRequestDTO userRequestDTO) {
 
@@ -51,6 +53,7 @@ public class UserController {
 
     }
 
+    @PermitAll
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserLoginDTO userLoginDTO) {
 

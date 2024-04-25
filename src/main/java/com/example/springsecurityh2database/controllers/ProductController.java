@@ -5,6 +5,7 @@ import com.example.springsecurityh2database.repository.ProductRepository;
 import com.example.springsecurityh2database.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,6 +22,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @PreAuthorize("hasAuthority('ADMIN') || hasAuthority('USER')")
     @GetMapping
     public ResponseEntity<List<ProductRequestDTO>> findAll() {
 
@@ -29,6 +31,7 @@ public class ProductController {
         return ResponseEntity.ok().body(list);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = "/insert")
     public ResponseEntity insert(@RequestBody ProductRequestDTO productRequestDTO) {
 
